@@ -5,15 +5,46 @@ require_relative 'video'
 require_relative 'channel'
 
 module HeadlineConnector
-  # Library for Github Web API
+  # Client Library for Youtube API
   class YoutubeApi
-    API_PROJECT_ROOT = 'https://youtube.googleapis.com/youtube/v3/'
-    module Errors
-      class BadToken < StandardError; end
+    YOUTUBE_PATH = 'https://youtube.googleapis.com/youtube/v3/'
 
-      class NotFound < StandardError; end
-      class Unauthorized < StandardError; end # rubocop:disable Layout/EmptyLineBetweenDefs
+    def initialize(api_key)
+      @api_key = api_key
     end
+
+    def data_collect(id)
+      data_collect_response = Request.new(YOUTUBE_PATH, @api_key)
+                                     .link(id).parse
+      Video.new(data_collect_response, self)
+    end
+  end
+
+  # Sends out HTTP requests to Youtube
+  class Request
+    def initialize(resource_root, api_key)
+      @resource_root = resource_root
+      @api_key = api_key
+    end
+
+    def link(id)
+      get(@resource_root + "videos?part=snippet&id=#{id}&key=" + @api_key)
+    end
+
+    def get(url)
+      http_response = HTTP.headers('Accept' => 'application/json').get(url)
+
+      Response.new(http_response).tap do |response|
+        raise(response.error) unless response.successful?
+      end
+    end
+  end
+
+  # Decorates HTTP responses from Youtube with success/error reporting
+  class Response < SimpleDelegator
+    BadToken = Class.new(StandardError)
+    Unauthorized = Class.new(StandardError)
+    NotFound = Class.new(StandardError)
 
     HTTP_ERROR = {
       400 => Errors::BadToken,
@@ -21,36 +52,12 @@ module HeadlineConnector
       404 => Errors::NotFound
     }.freeze
 
-    def initialize(api_key)
-      @api_key = api_key
+    def successful?
+      HTTP_ERROR.keys.include?(code) ? false : true
     end
 
-    def data_collect(id)
-      req_url = yt_path(id)
-      call_yt_url(req_url).parse
-    end
-
-    def video(data)
-      Video.new(data, self)
-    end
-
-    def channel(data)
-      Channel.new(data, self)
-    end
-
-    private
-
-    def yt_path(path)
-      "#{API_PROJECT_ROOT}videos?part=snippet&id=#{path}&key=#{@api_key}"
-    end
-
-    def call_yt_url(url)
-      result = HTTP.headers('Accept' => 'application/json').get(url)
-      successful?(result) ? result : raise(HTTP_ERROR[result.code])
-    end
-
-    def successful?(result)
-      !HTTP_ERROR.keys.include?(result.code)
+    def error
+      HTTP_ERROR[code]
     end
   end
 end
