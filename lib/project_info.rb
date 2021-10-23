@@ -37,6 +37,6 @@ yt_results['channelTitle'] = yt_results['channel'] # "channelTitle" and "channel
 yt_video_id = "cmSbXsFE3l7" # There wasn't a video with this video ID
 yt_video_url = yt_api_path("videos?part=snippet&id=#{yt_video_id}&key=#{config['YOUTUBE_TOKEN']}")
 yt_response[yt_video_url] = call_yt_url(config, yt_video_url)
-puts yt_response[yt_video_url].parse # makes sure any streaming finishes
+yt_response[yt_video_url].parse # makes sure any streaming finishes
 
 File.write('spec/fixtures/youtube_results.yml', yt_results.to_yaml)
