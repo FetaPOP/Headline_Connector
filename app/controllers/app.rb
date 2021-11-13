@@ -49,7 +49,6 @@ module HeadlineConnector
 
         routing.on String do |video_id|
           # GET /feed/#{video_id}
-          puts "youtube_video: #{Repository::For.klass(Entity::Feed).find_feed_id(video_id)}"
           routing.get do
             # Get project from database (not from Youtube API anymore)
             youtube_video = Repository::For.klass(Entity::Feed)

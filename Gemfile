@@ -2,10 +2,6 @@
 
 source 'https://rubygems.org'
 ruby File.read('.ruby-version').strip
-gem 'rake'
-group :production do
-  gem 'pg'
-end
 
 # Configuration and Utilities
 gem 'figaro', '~> 1.2'
@@ -24,26 +20,38 @@ gem 'dry-types', '~> 1.5'
 gem 'http', '~> 5.0'
 
 # Database
-gem 'hirb'
+gem 'hirb', '~> 0'
 gem 'hirb-unicode', '~> 0'
-gem 'sequel' # Mapper from objects and relational database
+gem 'sequel', '~> 5.49' 
+# Mapper from objects and relational database
 
 group :development, :test do
   gem 'sqlite3', '~> 1.4'
 end
 
+group :production do
+  gem 'pg'
+end
+
 # Testing
-gem 'minitest', '~> 5.0'
-gem 'minitest-rg', '~> 5.0'
-gem 'rerun', '~> 0'
-gem 'simplecov', '~> 0'
-gem 'vcr', '~> 6.0'
-gem 'webmock', '~> 3.0'
+group :test do
+  gem 'minitest', '~> 5.0'
+  gem 'minitest-rg', '~> 5.0'
+  gem 'simplecov', '~> 0'
+  gem 'vcr', '~> 6.0'
+  gem 'webmock', '~> 3.0'
+end
+
+group :development do
+  gem 'rerun', '~> 0'
+end
 
 # Debugging
 gem 'pry'
 
 # Code Quality
-gem 'flog'
-gem 'reek'
-gem 'rubocop'
+group :development do
+  gem 'flog'
+  gem 'reek'
+  gem 'rubocop'
+end
