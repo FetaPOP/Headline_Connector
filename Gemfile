@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
+ruby File.read('.ruby-version').strip
+gem 'rake'
+group :production do
+  gem 'pg'
+end
 
 # Configuration and Utilities
 gem 'figaro', '~> 1.2'
