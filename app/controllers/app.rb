@@ -2,6 +2,7 @@
 
 require 'roda'
 require 'slim'
+require 'pry'
 
 module HeadlineConnector
   # Web App
@@ -34,7 +35,7 @@ module HeadlineConnector
             video_id = query["v"]
 
             # Get a video from Youtube
-            feed = Youtube::FeedtMapper
+            feed = Youtube::FeedMapper
               .new(App.config.YOUTUBE_TOKEN)
               .find(video_id)
 
@@ -48,11 +49,11 @@ module HeadlineConnector
 
         routing.on String do |video_id|
           # GET /feed/#{video_id}
+          puts "youtube_video: #{Repository::For.klass(Entity::Feed).find_feed_id(video_id)}"
           routing.get do
             # Get project from database (not from Youtube API anymore)
             youtube_video = Repository::For.klass(Entity::Feed)
               .find_feed_id(video_id)
-
             # Show viewer the project
             view 'feed', locals: { feed: youtube_video }
           end
