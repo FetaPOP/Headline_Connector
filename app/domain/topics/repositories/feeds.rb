@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'providers'
+require 'json'
 
 module HeadlineConnector
   module Repository
@@ -34,7 +35,7 @@ module HeadlineConnector
           feed_id: db_feed_record.feed_id,
           feed_title: db_feed_record.feed_title,
           description: db_feed_record.description,
-          tags: db_feed_record.tags.split(','),
+          tags: JSON.parse(db_feed_record.tags),
           provider: Providers.rebuild_entity(db_feed_record.provider)
           # db_feed_record.provider is a Database::ProviderOrm object
         )
@@ -49,13 +50,15 @@ module HeadlineConnector
       def self.create(feed_entity)
         raise 'Feed already exists' if find(feed_entity)
 
-        Database::FeedOrm.create(
+        db_feed_record = Database::FeedOrm.create(
           feed_id: feed_entity.feed_id,
           feed_title: feed_entity.feed_title,
           description: feed_entity.description,
-          tags: feed_entity.tags.join(','),
+          tags: JSON.generate(feed_entity.tags),
           provider: Providers.db_find_or_create(feed_entity.provider)
         )
+        
+        rebuild_entity(db_feed_record)
       end
     end
   end

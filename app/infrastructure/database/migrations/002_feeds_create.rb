@@ -11,8 +11,7 @@ Sequel.migration do
       String      :feed_id, unique: true
       String      :feed_title
       String      :description
-      String      :tags
-      # Note that "tags" in our Feed Entities is Array. Be careful of the conversion of Array <-> String
+      String      :tags # JSON string of the original array of tags
 
       DateTime :created_at
       DateTime :updated_at
