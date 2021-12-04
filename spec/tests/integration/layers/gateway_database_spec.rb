@@ -23,7 +23,7 @@ describe 'Integration Tests of Youtube API and Database' do
     it 'HAPPY: should be able to create a feed object from Youtube and save the info to database' do
       feed = HeadlineConnector::Youtube::FeedMapper
         .new(YOUTUBE_TOKEN)
-        .find(VIDEO_ID)
+        .request_video(VIDEO_ID)
 
       rebuilt = HeadlineConnector::Repository::For.entity(feed).create(feed)
 
@@ -33,6 +33,30 @@ describe 'Integration Tests of Youtube API and Database' do
       _(rebuilt.tags).must_equal(feed.tags)
       _(rebuilt.provider.provider_id).must_equal(feed.provider.provider_id)
       _(rebuilt.provider.provider_title).must_equal(feed.provider.provider_title)
+    end
+  end
+
+  describe 'Retrieve and store topic data to database' do
+    before do
+      DatabaseHelper.wipe_database
+    end
+
+    it 'HAPPY: should be able to create a topic object fetched from Youtube and save the related_videos_ids to database' do
+      topic = HeadlineConnector::Youtube::TopicMapper
+          .new(YOUTUBE_TOKEN)
+          .search_keyword(TOPIC_NAME)
+
+      topic.related_videos_ids.each do |video_id|
+        feed = HeadlineConnector::Youtube::FeedMapper
+          .new(YOUTUBE_TOKEN)
+          .request_video(video_id)
+
+        HeadlineConnector::Repository::For.entity(feed).create(feed)
+      end
+
+      rebuilt = HeadlineConnector::Repository::For.entity(topic).create(topic)
+
+      _(rebuilt.related_videos_ids.sort!).must_equal(topic.related_videos_ids.sort!)
     end
   end
 end

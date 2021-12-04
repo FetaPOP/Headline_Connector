@@ -7,6 +7,7 @@ module DatabaseHelper
     HeadlineConnector::App.DB.run('PRAGMA foreign_keys = OFF')
     HeadlineConnector::Database::FeedOrm.map(&:destroy)
     HeadlineConnector::Database::ProviderOrm.map(&:destroy)
+    HeadlineConnector::Database::TopicOrm.map(&:destroy)
     HeadlineConnector::App.DB.run('PRAGMA foreign_keys = ON')
   end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require_relative 'providers'
+
+require_relative 'feeds'
 
 module HeadlineConnector
   module Repository
@@ -10,7 +11,7 @@ module HeadlineConnector
       end
 
       def self.find(topic_entity)
-        find_topic(topic_entity.keyword)
+        find_topic_keyword(topic_entity.keyword)
       end
 
       def self.find_topic_keyword(keyword)
@@ -29,26 +30,31 @@ module HeadlineConnector
 
       def self.create(topic_entity)
         raise 'Topic already exists' if find(topic_entity)
-
-        db_topic_record = PersistProject.new(topic_entity).call
+        db_topic_record = TopicPersistProject.new(topic_entity).call
         rebuild_entity(db_topic_record)
       end
 
-      class PersistProject
-        def initialize(entity)
-          @entity = entity
+      class TopicPersistProject
+        def initialize(topic_entity)
+          @topic_entity = topic_entity
         end
 
         def create_topic
-          Database::TopicOrm.create(keyword: @entity.keyword)
+          Database::TopicOrm.create(keyword: @topic_entity.keyword)
         end
 
         def call
+=begin
+          Do make sure that the app has stored all related videos/feeds of the topic
+          to the database before calling this method
+=end 
           create_topic.tap do |a_topic_from_db|
-            @entity.related_feeds.each do |feed_entity|
-              a_topic_from_db.add_related_feed(Feeds.db_find_or_create(feed_entity))
+            @topic_entity.related_videos_ids.each do |a_related_video_id|
+              a_topic_from_db.add_related_feed(Feeds.first(a_related_video_id))
             end
           end
+        rescue
+          raise 'Have some troubles in building the connection between topic and its related feeds'
         end
       end
     end

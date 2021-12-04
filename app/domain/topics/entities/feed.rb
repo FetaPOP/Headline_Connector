@@ -18,10 +18,6 @@ module HeadlineConnector
       attribute :description,   Strict::String
       attribute :tags,          Strict::Array
       attribute :provider,      Provider
-    
-      def to_attr_hash
-        to_hash.reject { |key, _| %i[id provider].include? key }
-      end
     end
   end
 end
