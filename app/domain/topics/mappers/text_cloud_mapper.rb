@@ -19,7 +19,11 @@ module HeadlineConnector
             end
 
             def build_entity(stats)
-                Entity::TextCloud.new(stats: stats)
+                stats.sort_by! do |small_array|
+                    small_array[1] 
+                end
+
+                Entity::TextCloud.new(stats: stats.reverse) # return the test_cloud stats array with the largest to the smallest
             end
         end
     end

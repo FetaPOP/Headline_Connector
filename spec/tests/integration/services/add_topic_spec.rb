@@ -35,22 +35,9 @@ describe 'GenerateTextCloud Service Integration Test' do
       rebuilt_topic_entity = topic_entity_result.value!
       
       _(rebuilt_topic_entity.related_videos_ids.length()).must_equal topic_entity.related_videos_ids.length()
-
-      puts topic_entity.related_videos_ids.length()
-      puts topic_entity.related_videos_ids.sort!
-
-      puts rebuilt_topic_entity.related_videos_ids.length()
-      puts rebuilt_topic_entity.related_videos_ids.sort!
       
-      puts "\n\n"
-      count = 0
       topic_entity.related_videos_ids.each do |video_id|
-        puts "---------------------------the " + count.to_s + " video_id:    " + video_id
-        #_(rebuilt_topic_entity.related_videos_ids.include? video_id).must_equal true
-        puts rebuilt_topic_entity.related_videos_ids[count]
-        puts rebuilt_topic_entity.related_videos_ids[count]==video_id ? 'ok' : 'NOOO'
-        puts rebuilt_topic_entity.related_videos_ids.include? video_id if rebuilt_topic_entity.related_videos_ids[count]!=video_id
-        count += 1
+        _(rebuilt_topic_entity.related_videos_ids.include? video_id).must_equal true
       end
     end
 

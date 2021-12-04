@@ -29,10 +29,6 @@ module HeadlineConnector
         input[:related_feeds_entities] = input[:topic].related_videos_ids.map do |video_id|
           Repository::For.klass(Entity::Feed).find_feed_id(video_id)
         end
-
-        input[:related_feeds_entities].each do |x|
-          puts x.feed_id
-        end
         
         Success(input)
         
