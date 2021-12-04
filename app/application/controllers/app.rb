@@ -14,8 +14,7 @@ module HeadlineConnector
     plugin :flash
     plugin :all_verbs # recognizes HTTP verbs beyond GET/POST (e.g., DELETE)
     plugin :render, engine: 'slim', views: 'app/presentation/views_html'
-    plugin :assets, path: 'app/presentation/assets',
-                    css: 'style.css', js: 'table_row_click.js'
+    plugin :assets, path: 'app/presentation/assets', css: 'style.css'
                     
     use Rack::MethodOverride # for other HTTP verbs (with plugin all_verbs)
 
@@ -27,44 +26,29 @@ module HeadlineConnector
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
 
-        # Load previously viewed topics
-        result = Service::ListTopics.new.call(session[:watching])
-
-        if result.failure?
-          flash[:error] = result.failure
-          viewable_topics = []
-        else
-          topics = result.value!
-          if topics.none?
-            flash.now[:notice] = 'Insert a keyword to get started'
-          end
-
-          session[:watching] = topics.map(&:keyword)
-          viewable_topics = Views::TopicsList.new(topics)
-        end
-
-        view 'home', locals: { topics: viewable_topics }
+        view 'home'
       end
 
       routing.on 'topic' do
         routing.is do
           # POST /topic/
           routing.post do
-            keyword = Forms::NewTopic.new.call(routing.params)
-            topic_made = Service::AddTopic.new.call(keyword)
-            
-            if topic_made.failure?
-              flash[:error] = topic_made.failure
+            input = Forms::NewTopic.new.call(routing.params)
+            topic_entity_result = Service::AddTopic.new.call(input)
+          
+            if topic_entity_result.failure?
+              flash[:error] = topic_entity_result.failure
               routing.redirect '/'
             end
 
-            topic = topic_made.value!
-            # Add new topic to watched set in cookies (wip)
-            session[:watching].insert(0, topic).uniq!
-            # Redirect viewer to search page
-            flash[:notice] = 'Topic added to your list'
-            routing.redirect "topic/#{keyword}"
+            topic_entity = topic_entity_result.value!
 
+            # Add new topic to watched set in cookies (wip)
+            session[:watching].insert(0, topic_entity).uniq!
+
+            # Redirect viewer to their requested page
+            flash[:notice] = 'Topic added to your list'
+            routing.redirect "topic/#{topic_entity.keyword}"
           end
         end
         
@@ -74,21 +58,18 @@ module HeadlineConnector
             # Request related videos info from database or from Youtube Api(if not found in database)
             session[:watching] ||= []
 
-            result = Service::GenerateTextCloud.new.call(
-              watched_list: session[:watching],
-              keyword: keyword
-            )
+            result = Service::GenerateTextCloud.new.call(keyword: keyword)
 
             if result.failure?
               flash[:error] = result.failure
               routing.redirect '/'
-            end
+            end         
 
             request_feeds = result.value!
 
             # Show viewer the topic
-            # Need to change to view object
-            view 'topic', locals: { keyword: request_feeds[:keyword], text_cloud_stats: request_feeds[:textcloud].text_cloud_stats }  
+            # Need to change to topic view object
+            view 'topic', locals: { keyword: request_feeds[:keyword], text_cloud: request_feeds[:textcloud] }  
 
           end        
         end

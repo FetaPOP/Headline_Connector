@@ -2,69 +2,43 @@
 
 require 'http'
 require 'yaml'
-require 'pry'
 
-config = YAML.safe_load(File.read('config/secrets.yml'))
-yt_api_key = config['test']['YOUTUBE_TOKEN']
+YOUTUBE_TOKEN = YAML.safe_load(File.read('config/secrets.yml'))["test"]["YOUTUBE_TOKEN"]
+
 def yt_api_path(path)
   "https://www.googleapis.com/youtube/v3/#{path}"
 end
 
-def call_yt_api(url)
+def call_yt_url(url)
   HTTP.headers('Accept' => 'application/json').get(url)
 end
 
 yt_response = {}
-yt_results = Hash.new
+yt_results = {}
 
-## Save information be index
-def save_info_from_video(video)
-  {
-  "id" => video['items'][0]['id'], # should be "mSbXsFE3l8"
-  "title" => video['items'][0]['snippet']['title'], # Should be "Anna Kendrick - Cups ..."
-  "description" => video['items'][0]['snippet']['description'], # Should be the description of this song
-  "tags" => video['items'][0]['snippet']['tags'], # Should be an array of tags
-  "channelTitle" => video['items'][0]['snippet']['channelTitle'], # should be "AnnaKendrickVEVO"
-  "channelId" => video['items'][0]['snippet']['channelId'] # Should be "UCgqabVNmn6dTr66Oy_LP_VA"
-  }
-end
-
-## Use video function to get tags and other information
-def request_videos(yt_video_id, yt_api_key)
-  yt_video_url = yt_api_path("videos?part=snippet&id=#{yt_video_id}&key=#{yt_api_key}")
-  call_yt_api(yt_video_url).parse
-end
-
-## the expected amount of search results
-max_results = 5
-
-## the search query
-q = "surfing"
-yt_results['keyword'] = q
+## youtube videoID for testing
+yt_video_id = "Sa3KXgwkiO0" # https://www.youtube.com/watch?v=Sa3KXgwkiO0
 
 ## HAPPY video request
-## Search_result request
-yt_video_url = yt_api_path("search?part=snippet&maxResults=#{max_results}&q=#{q}&key=#{yt_api_key}")
-search_result = call_yt_api(yt_video_url).parse # search_result should be a hash
+yt_video_url = yt_api_path("videos?part=snippet&id=#{yt_video_id}&key=#{YOUTUBE_TOKEN}")
+yt_response[yt_video_url] = call_yt_url(yt_video_url)
+video = yt_response[yt_video_url].parse # happy_video should be a hash
 
-## Video request
-items = search_result['items']
-items.each_with_index do |var, index|
-  video_id = var["id"]["videoId"]
-  video_content = request_videos(video_id, yt_api_key)
-  yt_results[index] = save_info_from_video(video_content)
-end
+puts video.to_yaml
 
-yt_results_hash = {}
-yt_results.each do |key, value|
-  next if key == 'keyword' || yt_results[key]["tags"] == nil
-  yt_results[key]["tags"].each do |tag|
-    yt_results_hash[tag].nil? ? yt_results_hash[tag] = 1 : yt_results_hash[tag] += 1
-  end
-end
+## Test happy_video
+yt_results['id'] = video['items'][0]['id']
+yt_results['title'] = video['items'][0]['snippet']['title']
+yt_results['description'] = video['items'][0]['snippet']['description']
+yt_results['tags'] = video['items'][0]['snippet']['tags']
+yt_results['channel'] = video['items'][0]['snippet']['channelTitle']
+yt_results['channelId'] = video['items'][0]['snippet']['channelId']
+yt_results['channelTitle'] = yt_results['channel']
 
-puts yt_results_hash.to_a
+## BAD project request
+yt_video_id = "cmSbXsFE3l7" # There wasn't a video with this video ID
+yt_video_url = yt_api_path("videos?part=snippet&id=#{yt_video_id}&key=#{YOUTUBE_TOKEN}")
+yt_response[yt_video_url] = call_yt_url(yt_video_url)
+yt_response[yt_video_url].parse # makes sure any streaming finishes
 
 File.write('spec/fixtures/youtube_results.yml', yt_results.to_yaml)
-# File.open("youtube_results_5_video.yml", "w") {|f| f.write(yt_results.to_yaml) }
-

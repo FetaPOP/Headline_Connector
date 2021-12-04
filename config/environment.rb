@@ -21,7 +21,6 @@ module HeadlineConnector
     use Rack::Session::Cookie, secret: config.SESSION_SECRET
 
     configure :development, :test, :app_test do # This "configure" function comes from :environments plugin
-      require 'pry'; # for breakpoints
       ENV['DATABASE_URL'] = "sqlite://#{config.DB_FILENAME}"
     end
 

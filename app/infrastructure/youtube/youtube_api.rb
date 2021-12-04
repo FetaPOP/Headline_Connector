@@ -7,12 +7,13 @@ module HeadlineConnector
     # Client Library for Youtube API
     class Api
       YOUTUBE_API_ROOT = 'https://youtube.googleapis.com/youtube/v3'
+
       def initialize(api_key)
         @api_key = api_key
       end
 
-      def request_video(id)
-        Request.new(YOUTUBE_API_ROOT, @api_key).request_video(id).parse
+      def request_video(video_id)
+        Request.new(YOUTUBE_API_ROOT, @api_key).request_video(video_id).parse
       end
 
       def search_keyword(keyword, max_results)
@@ -34,11 +35,11 @@ module HeadlineConnector
           end
         end
 
-        def request_video(id)
-          get("#{@resource_root}/videos?part=snippet&id=#{id}&key=#{@api_key}")
+        def request_video(video_id)
+          get("#{@resource_root}/videos?part=snippet&id=#{video_id}&key=#{@api_key}")
         end
 
-        def search_keyword(keyword, max_results)
+        def search_keyword(keyword, max_results = 50)
           get("#{@resource_root}/search?part=snippet&maxResults=#{max_results}&q=#{keyword}&key=#{@api_key}")
         end
       end
