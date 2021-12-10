@@ -20,11 +20,8 @@ module HeadlineConnector
         @request.add_topic(keyword)
       end
 
-      # Gets appraisal of a project folder rom API
-      # - req: ProjectRequestPath
-      #        with #owner_name, #project_name, #folder_name, #project_fullname
-      def generate_textCloud(req)
-        @request.generate_textCloud(req)
+      def generate_textCloud(keyword)
+        @request.generate_textCloud(keyword)
       end
 
       # HTTP request transmitter
@@ -42,8 +39,8 @@ module HeadlineConnector
           call_api('post', ['topics', keyword])
         end
 
-        def generate_textCloud(req)
-          call_api('get', ['topics', req.keyword])
+        def generate_textCloud(keyword)
+          call_api('get', ['topics', keyword])
         end
 
         private
