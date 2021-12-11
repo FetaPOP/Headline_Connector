@@ -39,7 +39,6 @@ module HeadlineConnector
       def generate_text_cloud(input)
           input[:textcloud] = Mapper::TextCloudMapper.new(input[:related_feeds_entities]).generate_textcloud
     
-          # input[:textcloud] ? Success(input) : Failure('No textcloud')
           result = Gateway::Api.new(HeadlineConnector::Api.config)
             .generate_textCloud(input[:text_cloud])
 
