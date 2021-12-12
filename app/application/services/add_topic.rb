@@ -8,30 +8,36 @@ module HeadlineConnector
     class AddTopic
       include Dry::Transaction
 
-      step :check_user_input
-      step :find_topic
-      step :store_topic
+      step :validate_input
+      step :request_topic
+      step :reify_topic
 
       private
 
-      def check_user_input(input)
+      def validate_input(input)
         if input.success?
           Success(keyword: input[:keyword])
         else
-          Failure('User inputs to the homepage are invalid.')
+          Failure(input.errors.values.join('; '))
         end
       end
 
-      def find_topic(input)
-        if (topic = topic_entity_in_database(input))
-          input[:local_topic] = topic
-        else
-          input[:remote_topic] = topic_entity_from_youtube(input)
-        end
-        Success(input)
-      rescue StandardError => error
-        puts error.backtrace.join("\n")
-        Failure('Having some troubles in find_topic() service')
+      def request_topic(input)
+        result = Gateway::Api.new(HeadlineConnector::App.config)
+          .add_topic(input[:keyword])
+
+        result.success? ? Success(result.payload) : Failure(result.message)
+      rescue StandardError => e
+        puts e.inspect + '\n' + e.backtrace
+        Failure('Cannot request topic right now; please try again later')
+      end
+
+      def reify_topic(topic_json)
+        Representer::Topic.new(OpenStruct.new)
+          .from_json(topic_json)
+          .then { |topic| Success(topic) }
+      rescue StandardError
+        Failure('Error in the topic -- please try again')
       end
 
       def store_topic(input)
@@ -63,10 +69,10 @@ module HeadlineConnector
       end
 
       def topic_entity_in_database(input)
-        Repository::For.klass(Entity::Topic).find_topic_keyword(input[:keyword])
+        Repository::For.klass(Entity::Topic).request_topic_keyword(input[:keyword])
       rescue StandardError
         puts error.backtrace.join("\n")
-        raise 'Having some troubles conducting find_topic_keyword() on the database.'
+        raise 'Having some troubles conducting request_topic_keyword() on the database.'
       end
 
       def search_and_store_missing_feeds(topic_entity)
