@@ -11,7 +11,7 @@ module HeadlineConnector
     class Feeds < Roar::Decorator
       include Roar::JSON
 
-      collection :feeds, extend: Representer::Feed,
+      collection :feeds, extend: Representer::Feed, class: OpenStruct
     end
   end
 end
