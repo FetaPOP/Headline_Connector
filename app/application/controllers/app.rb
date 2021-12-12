@@ -3,7 +3,7 @@
 require 'roda'
 require 'slim'
 require 'slim/include'
-require_relative 'helpers.rb'
+require_relative 'helpers'
 
 module HeadlineConnector
   # Web App
