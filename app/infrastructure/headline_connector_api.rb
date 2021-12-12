@@ -5,7 +5,7 @@ require 'http'
 
 module HeadlineConnector
   module Gateway
-    # Infrastructure to call CodePraise API
+    # Infrastructure to call Headline Connector API
     class Api
       def initialize(config)
         @config = config
