@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'list_request'
 require 'http'
 
 module HeadlineConnector

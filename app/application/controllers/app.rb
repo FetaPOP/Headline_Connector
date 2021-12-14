@@ -59,7 +59,10 @@ module HeadlineConnector
             # Request related videos info from database or from Youtube Api(if not found in database)
             session[:watching] ||= []
 
-            result = Service::GenerateTextCloud.new.call(keyword: keyword)
+            result = Service::GenerateTextCloud.new.call(
+              watched_list: session[:watching],
+              keyword: keyword
+            )
 
             if result.failure?
               flash[:error] = result.failure
