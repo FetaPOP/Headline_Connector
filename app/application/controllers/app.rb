@@ -13,6 +13,7 @@ module HeadlineConnector
     plugin :halt
     plugin :flash
     plugin :all_verbs # recognizes HTTP verbs beyond GET/POST (e.g., DELETE)
+    plugin :caching
     plugin :render, engine: 'slim', views: 'app/presentation/views_html'
     plugin :assets, path: 'app/presentation/assets', css: 'style.css'
                     
@@ -69,6 +70,7 @@ module HeadlineConnector
 
             # Show viewer the topic
             # Need to change to topic view object
+            response.expires 60, public: true
             view 'topic', locals: { keyword: request_feeds[:keyword], text_cloud: request_feeds[:textcloud] }  
 
           end        
