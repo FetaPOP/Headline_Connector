@@ -8,20 +8,27 @@ module HeadlineConnector
     class GenerateTextCloud
       include Dry::Transaction
 
-      step :generate_text_cloud
+      step :validate_topic_in_api
+      step :request_text_cloud
       step :reify_textCloud
 
       private
 
-      def generate_text_cloud(input)
-          input[:textcloud] = Mapper::TextCloudMapper.new(input[:related_feeds_entities]).generate_textcloud
-    
-          result = Gateway::Api.new(HeadlineConnector::Api.config)
-            .generate_textCloud(input[:text_cloud])
+      def validate_topic_in_api(input)
+        result = Gateway::Api.new(App.config).add_topic(input[:keyword])
+        result.success? ? Success(input) : Failure('Topic validation in the Api failed')
 
-          result.success? ? Success(result.payload) : Failure(result.message)
+      rescue StandardError => error
+        puts error.backtrace.join("\n")
+        Failure('Having some troubles validating topics in the Api database')
+      end
+
+      def request_text_cloud(input)
+        result = Gateway::Api.new(App.config).generate_textCloud(input[:keyword])
+        result.success? ? Success(result.payload) : Failure(result.message)
+        
       rescue StandardError
-        Failure('Having some troubles conducting generate_text_cloud() calculations')
+        Failure('Having some troubles get reply of request_text_cloud() from the Api')
       end
 
       def reify_textCloud(text_cloud_json)
@@ -30,22 +37,7 @@ module HeadlineConnector
           .then { |text_cloud| Success(text_cloud) }
       rescue StandardError
         Failure('Error in our text cloud generator -- please try again')
-      end
-
-      # Helper funtions
-      def request_videos(input)
-        # Assume that all related videos are already in the database
-        input[:related_feeds_entities] = input[:topic].related_videos_ids.map do |video_id|
-          Repository::For.klass(Entity::Feed).find_feed_id(video_id)
-        end
-        
-        Success(input)
-        
-      rescue StandardError => error
-        puts error.backtrace.join("\n")
-        Failure('Having some troubles conducting request_videos() to the Youtube Api')
-      end
-      
+      end      
     end
   end
 end
