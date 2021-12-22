@@ -13,10 +13,8 @@ module HeadlineConnector
     class Topic < Roar::Decorator
       include Roar::JSON
 
-      property :id
       property :keyword
-      property :text_cloud, extend: Representer::TextCloud, class: OpenStruct
-      collection :feeds, extend: Representer::Feed, class: OpenStruct
+      collection :related_videos_ids
 
     end
   end

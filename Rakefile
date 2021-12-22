@@ -8,20 +8,21 @@ task :default do
   puts `rake -T`
 end
 
+desc 'Run application console (irb)'
+task :console do
+  sh 'pry -r ./init.rb'
+end
+
 desc 'Run unit and integration tests'
 Rake::TestTask.new(:spec) do |t|
   t.pattern = 'spec/tests/{integration,unit}/**/*_spec.rb'
   t.warning = false
 end
 
-desc 'Run application console (irb)'
-task :console do
-  sh 'pry -r ./init.rb'
-end
-
-desc 'run tests'
-task :spec do
-  sh 'ruby spec/gateway_youtube_spec.rb'
+desc 'Run all tests'
+Rake::TestTask.new(:spec_all) do |t|
+  t.pattern = 'spec/tests/**/*_spec.rb'
+  t.warning = false
 end
 
 desc 'Keep rerunning unit/integration tests upon changes'
@@ -30,34 +31,14 @@ task :respec do
 end
 
 desc 'Run acceptance tests'
-task :spec_accept do
-  puts 'NOTE: run app in test environment in another process'
-  sh 'ruby spec/tests/acceptance/acceptance_spec.rb'
+Rake::TestTask.new(:spec_accept) do |t|
+  t.pattern = 'spec/tests/acceptance/*_spec.rb'
+  t.warning = false
 end
 
 desc 'Keep restarting web app upon changes'
 task :rerack do
-  sh "rerun -c rackup --ignore 'coverage/*'"
-end
-
-namespace :test do
-  desc 'run tests (alias to: "rake spec")'
-  task :spec do
-    sh 'ruby spec/gateway_youtube_spec.rb'
-  end
-
-  desc 'run youtube api tests after deleting all VCR cassettes files'
-  task :noVCR do
-    sh 'rm spec/fixtures/cassettes/*.yml' do |ok, _|
-      puts(ok ? 'Cassettes deleted' : 'No cassettes found')
-    end
-    sh 'ruby spec/gateway_youtube_spec.rb'
-  end
-
-  desc 'Generate the correct answer for gateway-youtubeapi tests'
-  task :youtubeapi_testcase do
-    sh 'ruby spec/fixtures/generate_youtubeapi_testcase.rb'
-  end
+  sh "rerun -c 'rackup -p 9292' --ignore 'coverage/*'"
 end
 
 namespace :run do

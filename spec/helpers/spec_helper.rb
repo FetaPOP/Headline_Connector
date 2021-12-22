@@ -12,7 +12,6 @@ require 'minitest/rg'
 
 require_relative '../../init'
 
-VIDEO_ID = 'Sa3KXgwkiO0'
 TOPIC_NAME = 'surfing'
 
 # Helper method for acceptance tests
