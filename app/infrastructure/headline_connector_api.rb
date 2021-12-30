@@ -15,6 +15,10 @@ module HeadlineConnector
         @request.get_root.success?
       end
 
+      def get_kw_list()
+        @request.get_kw_list()
+      end
+
       def add_topic(keyword)
         @request.add_topic(keyword)
       end
@@ -32,6 +36,10 @@ module HeadlineConnector
 
         def get_root # rubocop:disable Naming/AccessorMethodName
           call_api('get')
+        end
+
+        def get_kw_list()
+          call_api('get', ['kw_list'])
         end
 
         def add_topic(keyword)
