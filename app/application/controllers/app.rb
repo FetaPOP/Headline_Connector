@@ -26,8 +26,10 @@ module HeadlineConnector
       routing.root do # rubocop:disable Metrics/BlockLength
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
-
-        view 'home'
+        
+        #keyword should be Hash
+        keyword = ["surfing" ,"Google", "NY Times", "Youtube"]
+        view 'home', locals: { keyword: keyword } 
       end
 
       routing.on 'topic' do

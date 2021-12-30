@@ -6,6 +6,14 @@ h1 {
   font-weight: bold;
 }
 
+.kw {
+ font-size: large; 
+}
+
+.home-description {
+  line-height: 10;
+}
+
 .text-underline-hover {
   text-decoration: none;
 }
