@@ -3,6 +3,8 @@
 require 'roar/decorator'
 require 'roar/json'
 
+require_relative 'provider_representer'
+
 module HeadlineConnector
   module Representer
     # Represents a Feed's info
@@ -12,7 +14,7 @@ module HeadlineConnector
       property :feed_title
       property :description
       property :tags
-      property :provider
+      property :provider, extend: Representer::Provider, class: OpenStruct
     end
   end
 end

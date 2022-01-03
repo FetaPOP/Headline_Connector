@@ -10,13 +10,10 @@ require_relative 'feed_representer'
 module HeadlineConnector
   module Representer
     # Represent a Topic entity as Json
-    class Topic < Roar::Decorator
+    class KwList < Roar::Decorator
       include Roar::JSON
 
-      property :id
-      property :keyword
-      property :text_cloud, extend: Representer::TextCloud, class: OpenStruct
-      collection :feeds, extend: Representer::Feed, class: OpenStruct
+      collection :keywords
 
     end
   end

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'list_request'
 require 'http'
 
 module HeadlineConnector
@@ -14,6 +13,10 @@ module HeadlineConnector
 
       def alive?
         @request.get_root.success?
+      end
+
+      def get_kw_list()
+        @request.get_kw_list()
       end
 
       def add_topic(keyword)
@@ -35,12 +38,16 @@ module HeadlineConnector
           call_api('get')
         end
 
+        def get_kw_list()
+          call_api('get', ['kw_list'])
+        end
+
         def add_topic(keyword)
           call_api('post', ['topics', keyword])
         end
 
         def generate_textCloud(keyword)
-          call_api('get', ['topics', keyword])
+          call_api('get', ['textcloud', keyword])
         end
 
         private
@@ -48,6 +55,7 @@ module HeadlineConnector
         def call_api(method, resources = [])
           api_path = resources.empty? ? @api_host : @api_root
           url = [api_path, resources].flatten.join('/')
+
           HTTP.headers('Accept' => 'application/json').send(method, url)
             .then { |http_response| Response.new(http_response) }
         rescue StandardError
@@ -65,8 +73,16 @@ module HeadlineConnector
           code.between?(SUCCESS_CODES.first, SUCCESS_CODES.last)
         end
 
+        def failure?
+          !success?
+        end
+
+        def ok?
+          code == 200
+        end
+
         def message
-          payload['message']
+          JSON.parse(payload)['message']
         end
 
         def payload

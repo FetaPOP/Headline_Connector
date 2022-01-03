@@ -27,7 +27,10 @@ module HeadlineConnector
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
 
-        view 'home'
+        keywords = Service::GetKwList.new.call(input)
+        #keyword should be Array
+        keyword = ["surfing" ,"Google", "NY Times", "Youtube"]
+        view 'home', locals: { keyword: keyword } 
       end
 
       routing.on 'topic' do
@@ -64,14 +67,14 @@ module HeadlineConnector
             if result.failure?
               flash[:error] = result.failure
               routing.redirect '/'
-            end         
+            end
 
-            request_feeds = result.value!
+            text_cloud = result.value!
 
             # Show viewer the topic
             # Need to change to topic view object
             response.expires 60, public: true
-            view 'topic', locals: { keyword: request_feeds[:keyword], text_cloud: request_feeds[:textcloud] }  
+            view 'topic', locals: { keyword: keyword, text_cloud: text_cloud }  
 
           end        
         end

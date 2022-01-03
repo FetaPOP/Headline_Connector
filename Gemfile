@@ -48,3 +48,7 @@ group :development do
   gem 'reek'
   gem 'rubocop'
 end
+
+group :production do
+  gem 'pg', '~> 1.2'
+end

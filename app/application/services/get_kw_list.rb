@@ -5,11 +5,11 @@ require 'dry/transaction'
 module HeadlineConnector
   module Service
     # Transaction to store topic from Youtube API to database
-    class AddTopic
+    class GetKwList
       include Dry::Transaction
 
       step :validate_input
-      step :request_add_topic
+      step :request_kw_list
       step :reify_topic
 
       private
@@ -22,17 +22,17 @@ module HeadlineConnector
         end
       end
 
-      def request_add_topic(input)
-        result = Gateway::Api.new(App.config).add_topic(input[:keyword])
+      def request_kw_list(input)
+        result = Gateway::Api.new(App.config).get_kw_list()
         result.success? ? Success(result.payload) : Failure(result.message)
 
       rescue StandardError => e
         puts e.inspect + '\n' + e.backtrace
-        Failure('Having some troubles get reply of request_add_topic() from the Api')
+        Failure('Having some troubles get reply of request_kw_list() from the Api')
       end
 
       def reify_topic(topic_json)
-        Representer::Topic.new(OpenStruct.new)
+        Representer::KwList.new(OpenStruct.new)
           .from_json(topic_json)
           .then { |topic| Success(topic) }
 
