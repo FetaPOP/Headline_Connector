@@ -27,7 +27,10 @@ module HeadlineConnector
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
 
-        view 'home'
+        keywords = Service::GetKwList.new.call(input)
+        #keyword should be Array
+        keyword = ["surfing" ,"Google", "NY Times", "Youtube"]
+        view 'home', locals: { keyword: keyword } 
       end
 
       routing.on 'topic' do
