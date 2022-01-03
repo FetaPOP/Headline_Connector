@@ -4,3 +4,4 @@ coverage/*
 *.db
 _snippets/
 .rake_tasks~
+.bundle/
