@@ -1,21 +1,33 @@
 module Views
     # View for a single contributor
     class Item
-      def initialize(headline_cluster)
-        @headline_cluster = headline_cluster
+      def initialize(item)
+        @item = item
       end
   
       def entity
-        @headline_cluster
+        @item
       end
   
-      def title
-        @topic.key
+      def url
+        @item[:article_url]
       end
 
-      def related_videos_ids
-        @topic.related_videos_ids
+      def title
+        @item[:title]
+      end
+
+      def abstract
+        @item[:abstract]
+      end
+
+      def img
+        @item[:img]
+      end
+
+      def tag
+        @item[:tag]
       end
 
     end
-  end
+end

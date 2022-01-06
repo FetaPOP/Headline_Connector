@@ -3,6 +3,7 @@
 require 'roda'
 require 'slim'
 require 'slim/include'
+require 'yaml'
 require_relative 'helpers'
 
 module HeadlineConnector
@@ -19,6 +20,8 @@ module HeadlineConnector
                     
     use Rack::MethodOverride # for other HTTP verbs (with plugin all_verbs)
 
+    fake_data = YAML.load_file(File.join(File.dirname(__FILE__), '/fake_data.yml'))
+
     route do |routing|
       routing.assets # load CSS
 
@@ -27,29 +30,7 @@ module HeadlineConnector
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
 
-        # keywords = Service::GetKwList.new.call(input)
-        #keyword should be Array
-        keyword = ["surfing" ,"Google", "NY Times", "Youtube"]
-        headline_cluster = {
-          "Politics" => [{
-            title: "I am title.",
-            img: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-            article_url: "https://www.nytimes.com/2022/01/04/health/covid-omicron-hospitalizations.html",
-            tags_list: {
-              tag1: "/tag1",
-              tag2: "/tag2",
-              tag3: "/tag3",
-            }},{
-            title: "I am title_02.",
-            img: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-            article_url: "https://www.nytimes.com/2022/01/04/health/covid-omicron-hospitalizations.html",
-            tags_list: {
-              tag4: "/tag4",
-              tag5: "/tag5",
-              tag6: "/tag6",
-            }}
-            ]
-        }
+        headline_cluster = Views::HeadlineCluster.new(fake_data[:headline_cluster])
         view 'home', locals: { headline_cluster: headline_cluster } 
       end
 
