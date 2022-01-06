@@ -5,12 +5,12 @@ require 'dry/transaction'
 module HeadlineConnector
   module Service
     # Transaction to store topic from Youtube API to database
-    class GetKwList
+    class GetHeadlineCluster
       include Dry::Transaction
 
       step :validate_input
-      step :request_kw_list
-      step :reify_topic
+      step :request_headline_cluster
+      step :reify_headline_cluster
 
       private
 
@@ -22,19 +22,19 @@ module HeadlineConnector
         end
       end
 
-      def request_kw_list(input)
-        result = Gateway::Api.new(App.config).get_kw_list()
+      def request_headline_cluster(input)
+        result = Gateway::Api.new(App.config).get_headline_cluster()
         result.success? ? Success(result.payload) : Failure(result.message)
 
       rescue StandardError => e
         puts e.inspect + '\n' + e.backtrace
-        Failure('Having some troubles get reply of request_kw_list() from the Api')
+        Failure('Having some troubles get reply of request_headline_cluster() from the Api')
       end
 
-      def reify_topic(topic_json)
-        Representer::KwList.new(OpenStruct.new)
-          .from_json(topic_json)
-          .then { |topic| Success(topic) }
+      def reify_headline_cluster(headline_cluster_json)
+        Representer::HeadlineCluster.new(OpenStruct.new)
+          .from_json(headline_cluster_json)
+          .then { |headline_cluster| Success(headline_cluster) }
 
       rescue StandardError
         Failure('Error in the topic -- please try again')
