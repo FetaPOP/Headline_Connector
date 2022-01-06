@@ -30,7 +30,27 @@ module HeadlineConnector
         # keywords = Service::GetKwList.new.call(input)
         #keyword should be Array
         keyword = ["surfing" ,"Google", "NY Times", "Youtube"]
-        view 'home', locals: { keyword: keyword } 
+        headline_cluster = {
+          "Politics" => [{
+            title: "I am title.",
+            img: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+            article_url: "https://www.nytimes.com/2022/01/04/health/covid-omicron-hospitalizations.html",
+            tags_list: {
+              tag1: "/tag1",
+              tag2: "/tag2",
+              tag3: "/tag3",
+            }},{
+            title: "I am title_02.",
+            img: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+            article_url: "https://www.nytimes.com/2022/01/04/health/covid-omicron-hospitalizations.html",
+            tags_list: {
+              tag4: "/tag4",
+              tag5: "/tag5",
+              tag6: "/tag6",
+            }}
+            ]
+        }
+        view 'home', locals: { headline_cluster: headline_cluster } 
       end
 
       routing.on 'topic' do

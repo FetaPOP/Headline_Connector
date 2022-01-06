@@ -6,25 +6,21 @@ p class="text-muted"
     |
       Please feel free to take a look and watch the related videos
 
-.container
-  form role="form" action="/topic" method='POST' id='show-feed-form'
-    .row.vertical-align.query-bar
-      .col-md-8.col-sm-6
-        input { 
-          type='text' name='keyword'
-          id='topic_input' class="form-control"
-          placeholder="e.g. surfing"
-        }
-      .col-md-2.col-sm-3
-        button { 
-          type='submit' id='repo-form-submit' class='submit' 
-          value='submit' class="btn btn-success" 
-        } Let's Do Analyze
-    .row
-      .col-md-12.blank-row
-
 h3 
-  .row
-    - keyword.each do |kw|
-      .col-sm-12
-        a.kw href="/topic/#{kw}" #{kw}
+  .container
+    - headline_cluster.each do |section, content|
+      .row
+        span section
+      .row
+        .col-lg-2.col-md-2.col-sm-6
+          - content.each do |item|
+              a href="#{item.article_url}" item.title
+              img src="#{item.img}"
+              span.tags_list 
+                - item.tags_list.each do |tag|
+                    span.tag
+                      = item.tag
+
+
+        
+
