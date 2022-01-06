@@ -31,6 +31,8 @@ module HeadlineConnector
         session[:watching] ||= []
 
         headline_cluster = Views::HeadlineCluster.new(fake_data[:headline_cluster])
+        #headline_cluster = Service::GetHeadlineCluster.new.call()
+
         view 'home', locals: { headline_cluster: headline_cluster } 
       end
 

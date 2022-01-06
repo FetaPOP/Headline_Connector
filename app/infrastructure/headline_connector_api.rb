@@ -15,8 +15,8 @@ module HeadlineConnector
         @request.get_root.success?
       end
 
-      def get_kw_list()
-        @request.get_kw_list()
+      def get_headline_cluster()
+        @request.get_headline_cluster()
       end
 
       def add_topic(keyword)
@@ -38,8 +38,8 @@ module HeadlineConnector
           call_api('get')
         end
 
-        def get_kw_list()
-          call_api('get', ['kw_list'])
+        def get_headline_cluster()
+          call_api('get', ['headline_cluster'])
         end
 
         def add_topic(keyword)
