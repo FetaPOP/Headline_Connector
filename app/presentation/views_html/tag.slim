@@ -2,7 +2,7 @@
   h2
     a href="../../topic/#{tag}" class="text-success" ##{tag}
   .container
-    - result.time_section.each do |time_section|
+    - result.time_sections.each do |time_section|
       h3
         p #{time_section.duration}
       .row

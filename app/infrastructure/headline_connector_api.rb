@@ -27,6 +27,10 @@ module HeadlineConnector
         @request.generate_textCloud(keyword)
       end
 
+      def provide_video_list(tag)
+        @request.provide_video_list(tag)
+      end
+
       # HTTP request transmitter
       class Request
         def initialize(config)
@@ -48,6 +52,10 @@ module HeadlineConnector
 
         def generate_textCloud(keyword)
           call_api('get', ['textcloud', keyword])
+        end
+
+        def provide_video_list(tag)
+          call_api('get', ['video_list', tag])
         end
 
         private

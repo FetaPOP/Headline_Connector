@@ -9,7 +9,7 @@ module Views
         @tag
       end
 
-      def time_section
+      def time_sections
         @tag.map do |duration, video_list|
             TimeSection.new(duration, video_list)
         end
