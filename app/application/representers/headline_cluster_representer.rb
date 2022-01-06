@@ -3,17 +3,16 @@
 require 'roar/decorator'
 require 'roar/json'
 
-require_relative 'text_cloud_representer'
-require_relative 'feed_representer'
+require_relative 'section_representer'
 
 # Represents essential feeds and text_cloud of a topic for API output
 module HeadlineConnector
   module Representer
     # Represent a Topic entity as Json
-    class KwList < Roar::Decorator
+    class HeadlineCluster < Roar::Decorator
       include Roar::JSON
 
-      collection :keywords
+      collection :sections, extend: Representer::Section, class: OpenStruct
 
     end
   end
