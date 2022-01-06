@@ -3,8 +3,7 @@
 require 'roar/decorator'
 require 'roar/json'
 
-require_relative 'text_cloud_representer'
-require_relative 'feed_representer'
+require_relative 'section_representer'
 
 # Represents essential feeds and text_cloud of a topic for API output
 module HeadlineConnector

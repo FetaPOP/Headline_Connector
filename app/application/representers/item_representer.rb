@@ -3,8 +3,6 @@
 require 'roar/decorator'
 require 'roar/json'
 
-require_relative 'provider_representer'
-
 module HeadlineConnector
   module Representer
     # Represents a Feed's info

@@ -61,6 +61,34 @@ module HeadlineConnector
           end        
         end
       end
+
+      routing.on 'tag' do
+        
+        routing.on String do |tag|
+          # GET /tag/{tag}
+          routing.get do
+            # Request related videos info from database or from Youtube Api(if not found in database)
+            session[:watching] ||= []
+
+            # result = Service::GenerateTextCloud.new.call(keyword: keyword)
+            result = Views::Tag.new(fake_data[:video_list])
+
+            #if result.failure?
+            #  flash[:error] = result.failure
+            #  routing.redirect '/'
+            #end
+
+            # tag = result.value!
+
+            # Show viewer the topic
+            # Need to change to topic view object
+            # response.expires 60, public: true
+            view 'tag', locals: {tag: tag, result: result}  
+
+          end        
+        end
+      end
+
     end
   end
 end

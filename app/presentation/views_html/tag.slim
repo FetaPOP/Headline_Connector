@@ -1,22 +1,12 @@
-.container
-  .row
-    h2
-      span.feed.title
-        = feed.feed_title
-      span.feed.provider
-        = feed.provider.provider_title
+.row
+  h2
+    a href="../../topic/#{tag}" class="text-success" ##{tag}
   .container
-    .row
-      .col-lg-1.col-md-2.col-sm-2
-        span.feed.attribute Description:
-      .col-lg-11.col-md-10.col-sm-6
-        span.feed.detail
-          = feed.description
-    .row.top-buffer
-      .col-lg-1.col-md-2.col-sm-2
-        span.feed.attribute Tags:
-      .col-lg-11.col-md-10.col-sm-6
-        .row
-          - feed.tags.each do |tag|
-            .col-sm-12
-              span.feed.detail #{tag}
+    - result.time_section.each do |time_section|
+      h3
+        p #{time_section.duration}
+      .row
+        - time_section.video_list.each do |video|
+          .col-lg-6.col-md-6.col-sm-12
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/#{video.key}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      br
