@@ -37,27 +37,6 @@ module HeadlineConnector
       end
 
       routing.on 'topic' do
-        routing.is do
-          # POST /topic/
-          routing.post do
-            input = Forms::NewTopic.new.call(routing.params)
-            topic_entity_result = Service::AddTopic.new.call(input)
-          
-            if topic_entity_result.failure?
-              flash[:error] = topic_entity_result.failure
-              routing.redirect '/'
-            end
-
-            topic_entity = topic_entity_result.value!
-
-            # Add new topic to watched set in cookies (wip)
-            session[:watching].insert(0, topic_entity).uniq!
-
-            # Redirect viewer to their requested page
-            flash[:notice] = 'Topic added to your list'
-            routing.redirect "topic/#{topic_entity.keyword}"
-          end
-        end
         
         routing.on String do |keyword|
           # GET /topic/{keyword}
