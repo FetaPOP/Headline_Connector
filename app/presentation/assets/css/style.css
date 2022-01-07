@@ -1,6 +1,6 @@
-a {
+/* a {
   text-decoration: none;
-}
+} */
 
 h1 {
   font-weight: bold;
@@ -26,10 +26,6 @@ h1 {
 
 .feed.owner {
   font-weight: bold
-}
-
-.feed.name {
-  
 }
 
 .vcenter {
@@ -65,4 +61,61 @@ footer {
   padding: 0.5in;
   font-size:11px;
   color:rgb(100, 100, 100);
+}
+
+/* .tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 960px;
+  margin: auto;
+  padding: 2rem 0 1rem;
+  list-style: none;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  margin: 0.25rem 1rem;
+}
+
+.tag_link {
+  padding: 5px 5px 0;
+  transition: 0.3s;
+  text-decoration: none;
+} */
+
+/* Beautiful colour scheme unashamedly stolen from ChrisCoyier.net! */
+.tag:nth-of-type(4n+1) .tag_link {
+  color: #ffd560;
+}
+.tag:nth-of-type(4n+2) .tag_link {
+  color: #ee4266;
+}
+.tag:nth-of-type(4n+3) .tag_link {
+  color: #9e88f7;
+}
+.tag:nth-of-type(4n+4) .tag_link {
+  color: #54d0ff;
+}
+
+/* 
+a {
+  color: #ffd560;
+} */
+
+header,
+footer {
+  font-family: sans-serif;
+}
+
+footer {
+  margin-top: auto;
+  padding: 3rem 0 1rem;
+}
+
+ul {
+  list-style-type: none;
 }

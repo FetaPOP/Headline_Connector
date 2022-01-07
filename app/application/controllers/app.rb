@@ -26,8 +26,57 @@ module HeadlineConnector
       routing.root do # rubocop:disable Metrics/BlockLength
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
-
-        view 'home'
+        keyword_object_list = [
+          {
+            "keyword": "surfing",
+            "appearTimes": 2
+          },
+          {
+            "keyword": "covid",
+            "appearTimes": 21
+          },
+          {
+            "keyword": "weather",
+            "appearTimes": 12
+          },
+          {
+            "keyword": "Dagger at the Throat",
+            "appearTimes": 17
+          },
+          {
+            "keyword": "Capitol Attack Anniversary",
+            "appearTimes": 2
+          },
+          {
+            "keyword": "Novak Djokovic",
+            "appearTimes": 41
+          },
+          {
+            "keyword": "Our Democracy",
+            "appearTimes": 32
+          },
+          {
+            "keyword": "Weapons",
+            "appearTimes": 4
+          },
+          {
+            "keyword": "Capitol Attack Anniversary",
+            "appearTimes": 1
+          },
+          {
+            "keyword": "Novak Djokovic",
+            "appearTimes": 72
+          },
+          {
+            "keyword": "Our Democracy",
+            "appearTimes": 33
+          },
+          {
+            "keyword": "Weapons",
+            "appearTimes": 6
+          }
+        ]
+        view 'home', locals: { keyword: keyword_object_list}
       end
 
       routing.on 'topic' do
@@ -64,14 +113,14 @@ module HeadlineConnector
             if result.failure?
               flash[:error] = result.failure
               routing.redirect '/'
-            end
+            end         
 
-            text_cloud = result.value!
+            request_feeds = result.value!
 
             # Show viewer the topic
             # Need to change to topic view object
             response.expires 60, public: true
-            view 'topic', locals: { keyword: keyword, text_cloud: text_cloud }  
+            view 'topic', locals: { keyword: request_feeds[:keyword], text_cloud: request_feeds[:textcloud] }  
 
           end        
         end
