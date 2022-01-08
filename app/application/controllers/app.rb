@@ -30,16 +30,16 @@ module HeadlineConnector
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
 
-        # headline_cluster = Views::HeadlineCluster.new(fake_data[:headline_cluster])
-        result = Service::GetHeadlineCluster.new.call()
+        headline_cluster = Views::HeadlineCluster.new(fake_data[:headline_cluster])
+        # result = Service::GetHeadlineCluster.new.call()
 
-        if result.failure?
-          flash[:error] = result.failure
-        else
-          cluster = result.value!.headline_cluster
-        end
+        #if result.failure?
+        #  flash[:error] = result.failure
+        #else
+        #  cluster = result.value!.headline_cluster
+        #end
 
-        headline_cluster = Views::HeadlineCluster.new(cluster)
+        #headline_cluster = Views::HeadlineCluster.new(cluster)
 
         view 'home', locals: { headline_cluster: headline_cluster } 
       end
@@ -78,19 +78,19 @@ module HeadlineConnector
             # Request related videos info from database or from Youtube Api(if not found in database)
             session[:watching] ||= []
 
-            result = Service::ProvideVideoList.new.call(tag: tag)
-            # result = Views::Tag.new(fake_data[:video_list])
+            # result = Service::ProvideVideoList.new.call(tag: tag)
+            result = Views::Tag.new(fake_data[:video_list])
 
-            if result.failure?
-              flash[:error] = result.failure
-              routing.redirect '/'
-            end
+            #if result.failure?
+            #  flash[:error] = result.failure
+            #  routing.redirect '/'
+            #end
 
-            video_list = result.value!.tag
-            result = Views::Tag.new(video_list)
+            #video_list = result.value!.tag
+            #result = Views::Tag.new(video_list)
 
             # Show viewer the tag
-            response.expires 60, public: true
+            #response.expires 60, public: true
             view 'tag', locals: {tag: tag, result: result}  
 
           end        
