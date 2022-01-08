@@ -6,6 +6,10 @@ h1 {
   font-weight: bold;
 }
 
+.kw {
+ font-size: large; 
+}
+
 .text-underline-hover {
   text-decoration: none;
 }
@@ -118,4 +122,16 @@ footer {
 
 ul {
   list-style-type: none;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.mr-1 {
+  margin-right: 1em;
+}
+
+.pill {
+  border-radius: 20px;
 }

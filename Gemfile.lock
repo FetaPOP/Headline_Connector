@@ -107,6 +107,7 @@ GEM
     parser (3.0.3.1)
       ast (~> 2.4.1)
     path_expander (1.1.0)
+    pg (1.2.3)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -180,6 +181,7 @@ DEPENDENCIES
   minitest (~> 5.0)
   minitest-rg (~> 5.0)
   page-object (~> 2.3)
+  pg (~> 1.2)
   pry
   puma (~> 5.5)
   rack (~> 2)
@@ -192,6 +194,9 @@ DEPENDENCIES
   slim (~> 4.1)
   watir (~> 7.0)
   webdrivers (~> 5.0)
+
+RUBY VERSION
+   ruby 3.0.2p107
 
 RUBY VERSION
    ruby 3.0.2p107

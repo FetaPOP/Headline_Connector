@@ -10,8 +10,7 @@ html
       crossorigin="anonymous"
     }
 
-    / Custom CSS
-    / link rel='stylesheet' href='/presentation/assets/css/style.css'
+    / Custom CSS and JS
     == assets(:css)
     == assets(:js, defer: true)
     
@@ -30,10 +29,10 @@ html
       crossorigin="anonymous"
     }
 
-    .container id='html_body'
+    .main id='html_body'
       section
-        .row style="vertical-align: middle;"
-          .col-12
+        .div style="vertical-align: middle;"
+          .col-12.bg-primary.p-5.pb-3
             h1 id='main_header'
               a.text-underline-hover href="/" HeadlineConnector
 

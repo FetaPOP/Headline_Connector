@@ -1,19 +1,24 @@
-.container
-  form role="form" action="/topic" method='POST' id='show-feed-form'
-    .row.vertical-align.query-bar
-      .col-md-2.col-sm-3
-        .text-right Keyword:
-      .col-md-8.col-sm-6
-        input { 
-          type='text' name='keyword'
-          id='topic_input' class="form-control"
-          placeholder="e.g. surfing"
-        }
-      .col-md-2.col-sm-3
-        button { 
-          type='submit' id='repo-form-submit' class='submit' 
-          value='submit' class="btn btn-success" 
-        } Let's Do Analyze
-    .row style="font-size:32px"
-
-    
+.main
+  div.px-5.bg-primary.text-white.pb-3
+    |
+      There are the popular articles from NYTimes this week. 
+    br
+    |
+      Please feel free to take a look and watch the related videos
+  
+  - headline_cluster.sections.each do |section|
+    .mx-4.mx-sm-5.px-sm-0.px-4
+      h3.mt-4
+        span #{section.name}
+    - section.items.each do |item|
+      .d-sm-flex.border.border-secondary.rounded.p-0.mt-4.mx-5
+        .col-sm-4
+          img.w-100.h-100.object-fit-cover src="#{item.img}"
+        .col-sm-8.p-4
+          h3
+            a href="#{item.url}" #{item.title}
+          span class="text-muted" #{item.abstract}
+          br
+            form method="get" action="topic/#{item.tag}"
+              button class="btn mt-2" style="background-color:#56C8B1; color:#fff" type="summit" ##{item.tag}
+      

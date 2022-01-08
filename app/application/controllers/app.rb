@@ -3,6 +3,7 @@
 require 'roda'
 require 'slim'
 require 'slim/include'
+require 'yaml'
 require_relative 'helpers'
 
 module HeadlineConnector
@@ -19,6 +20,8 @@ module HeadlineConnector
                     
     use Rack::MethodOverride # for other HTTP verbs (with plugin all_verbs)
 
+    fake_data = YAML.load_file(File.join(File.dirname(__FILE__), '/fake_data.yml'))
+
     route do |routing|
       routing.assets # load CSS
 
@@ -26,32 +29,22 @@ module HeadlineConnector
       routing.root do # rubocop:disable Metrics/BlockLength
         # Get cookie viewer's previously viewed topics
         session[:watching] ||= []
-        
-        view 'home'
+
+        # headline_cluster = Views::HeadlineCluster.new(fake_data[:headline_cluster])
+        result = Service::GetHeadlineCluster.new.call()
+
+        if result.failure?
+          flash[:error] = result.failure
+        else
+          cluster = result.value!.headline_cluster
+        end
+
+        headline_cluster = Views::HeadlineCluster.new(cluster)
+
+        view 'home', locals: { headline_cluster: headline_cluster } 
       end
 
       routing.on 'topic' do
-        routing.is do
-          # POST /topic/
-          routing.post do
-            input = Forms::NewTopic.new.call(routing.params)
-            topic_entity_result = Service::AddTopic.new.call(input)
-          
-            if topic_entity_result.failure?
-              flash[:error] = topic_entity_result.failure
-              routing.redirect '/'
-            end
-
-            topic_entity = topic_entity_result.value!
-
-            # Add new topic to watched set in cookies (wip)
-            session[:watching].insert(0, topic_entity).uniq!
-
-            # Redirect viewer to their requested page
-            flash[:notice] = 'Topic added to your list'
-            routing.redirect "topic/#{topic_entity.keyword}"
-          end
-        end
         
         routing.on String do |keyword|
           # GET /topic/{keyword}
@@ -125,6 +118,34 @@ module HeadlineConnector
           end        
         end
       end
+
+      routing.on 'tag' do
+        
+        routing.on String do |tag|
+          # GET /tag/{tag}
+          routing.get do
+            # Request related videos info from database or from Youtube Api(if not found in database)
+            session[:watching] ||= []
+
+            result = Service::ProvideVideoList.new.call(tag: tag)
+            # result = Views::Tag.new(fake_data[:video_list])
+
+            if result.failure?
+              flash[:error] = result.failure
+              routing.redirect '/'
+            end
+
+            video_list = result.value!.tag
+            result = Views::Tag.new(video_list)
+
+            # Show viewer the tag
+            response.expires 60, public: true
+            view 'tag', locals: {tag: tag, result: result}  
+
+          end        
+        end
+      end
+
     end
   end
 end

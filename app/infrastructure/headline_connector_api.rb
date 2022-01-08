@@ -15,12 +15,20 @@ module HeadlineConnector
         @request.get_root.success?
       end
 
+      def get_headline_cluster()
+        @request.get_headline_cluster()
+      end
+
       def add_topic(keyword)
         @request.add_topic(keyword)
       end
 
       def generate_textCloud(keyword)
         @request.generate_textCloud(keyword)
+      end
+
+      def provide_video_list(tag)
+        @request.provide_video_list(tag)
       end
 
       # HTTP request transmitter
@@ -34,12 +42,20 @@ module HeadlineConnector
           call_api('get')
         end
 
+        def get_headline_cluster()
+          call_api('get', ['headline_cluster'])
+        end
+
         def add_topic(keyword)
           call_api('post', ['topics', keyword])
         end
 
         def generate_textCloud(keyword)
           call_api('get', ['textcloud', keyword])
+        end
+
+        def provide_video_list(tag)
+          call_api('get', ['video_list', tag])
         end
 
         private
