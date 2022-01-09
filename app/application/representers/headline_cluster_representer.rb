@@ -12,8 +12,7 @@ module HeadlineConnector
     class HeadlineCluster < Roar::Decorator
       include Roar::JSON
 
-      collection :sections, extend: Representer::Section, class: OpenStruct
-
+      collection :sections, extend:Representer::Section, class: OpenStruct
     end
   end
 end

@@ -10,13 +10,13 @@
     .mx-4.mx-sm-5.px-sm-0.px-4
       h3.mt-4
         span #{section.name}
-    - section.items.each do |item|
+    - section.section.each do |item|
       .d-sm-flex.border.border-secondary.rounded.p-0.mt-4.mx-5
         .col-sm-4
           img.w-100.h-100.object-fit-cover src="#{item.img}"
         .col-sm-8.p-4
           h3
-            a href="#{item.url}" #{item.title}
+            a href="#{item.article_url}" #{item.title}
           span class="text-muted" #{item.abstract}
           br
             form method="get" action="topic/#{item.tag}"

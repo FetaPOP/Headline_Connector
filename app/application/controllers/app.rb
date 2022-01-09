@@ -32,15 +32,11 @@ module HeadlineConnector
 
         # headline_cluster = Views::HeadlineCluster.new(fake_data[:headline_cluster])
         result = Service::GetHeadlineCluster.new.call()
-
         if result.failure?
           flash[:error] = result.failure
-        else
-          cluster = result.value!.headline_cluster
+          routing.redirect '/'
         end
-
-        headline_cluster = Views::HeadlineCluster.new(cluster)
-
+        headline_cluster = Views::HeadlineCluster.new(result.value!)
         view 'home', locals: { headline_cluster: headline_cluster } 
       end
 
