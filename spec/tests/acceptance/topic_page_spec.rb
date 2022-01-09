@@ -8,7 +8,6 @@ describe 'Topic Page Acceptance Tests' do
   include PageObject::PageFactory
 
   before do
-    # DatabaseHelper.wipe_database
     # Headless error? 
     # @headless = Headless.new
     @browser = Watir::Browser.new

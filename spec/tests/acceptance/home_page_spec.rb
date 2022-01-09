@@ -6,7 +6,6 @@ require_relative 'pages/home_page'
 describe 'Homepage Acceptance Tests' do
   include PageObject::PageFactory
   before do
-    # DatabaseHelper.wipe_database
     # @headless = Headless.new
     @browser = Watir::Browser.new
   end
