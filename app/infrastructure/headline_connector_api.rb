@@ -47,7 +47,7 @@ module HeadlineConnector
         end
 
         def add_topic(keyword)
-          call_api('post', ['topics', keyword])
+          call_api('post', ['topic', keyword])
         end
 
         def generate_textCloud(keyword)

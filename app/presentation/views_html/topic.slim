@@ -2,11 +2,11 @@
   h2
     span Topic
     span.topic style="padding-left:20px"
-<iframe width="560" height="315" src="https://www.youtube.com/embed/tLnpS-kHKik" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    = keyword
   div id="textcloud_table"
-    - if keyword.any?
+    - if stats.any?
       main.mt-5.w-75.w-lg-full.mx-auto
         ul.tags.d-flex.justify-content-center.list-unstyled.flex-wrap
-          - keyword.each do |word|
+          - stats.each do |word|
             li.tag
               a.tag_link.m-1 class="tag_#{word[:appearTimes]}" style="font-size:#{word[:appearTimes]}px" href="https://fetapop.herokuapp.com/topic/#{word[:keyword]}" = word[:keyword]

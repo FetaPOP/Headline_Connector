@@ -48,68 +48,16 @@ module HeadlineConnector
             # Request related videos info from database or from Youtube Api(if not found in database)
             session[:watching] ||= []
 
-            # result = Service::GenerateTextCloud.new.call(keyword: keyword)
-
-            # if result.failure?
-            #   flash[:error] = result.failure
-            #   routing.redirect '/'
-            # end         
-
+            result = Service::GenerateTextCloud.new.call(keyword: keyword)
+            if result.failure?
+              flash[:error] = result.failure
+              routing.redirect '/'
+            end         
+            stats = Views::TextCloud.new(result.value!)
             # request_feeds = result.value!
-            keyword_object_list = [
-              {
-                "keyword": "surfing",
-                "appearTimes": 2
-              },
-              {
-                "keyword": "covid",
-                "appearTimes": 21
-              },
-              {
-                "keyword": "weather",
-                "appearTimes": 12
-              },
-              {
-                "keyword": "Dagger at the Throat",
-                "appearTimes": 17
-              },
-              {
-                "keyword": "Capitol Attack Anniversary",
-                "appearTimes": 2
-              },
-              {
-                "keyword": "Novak Djokovic",
-                "appearTimes": 41
-              },
-              {
-                "keyword": "Our Democracy",
-                "appearTimes": 32
-              },
-              {
-                "keyword": "Weapons",
-                "appearTimes": 4
-              },
-              {
-                "keyword": "Capitol Attack Anniversary",
-                "appearTimes": 1
-              },
-              {
-                "keyword": "Novak Djokovic",
-                "appearTimes": 72
-              },
-              {
-                "keyword": "Our Democracy",
-                "appearTimes": 33
-              },
-              {
-                "keyword": "Weapons",
-                "appearTimes": 6
-              }
-            ]
-            # Show viewer the topic
-            # Need to change to topic view object
+           
             response.expires 60, public: true
-            view 'topic', locals: { keyword: keyword_object_list}
+            view 'topic', locals: { stat: stats}
 
           end        
         end
