@@ -34,7 +34,9 @@ module HeadlineConnector
       def reify_textCloud(text_cloud_json)
         Representer::TextCloud.new(OpenStruct.new)
           .from_json(text_cloud_json)
-          .then { |text_cloud| Success(text_cloud) }
+          .then do |text_cloud|
+            Success(text_cloud)
+          end
       rescue StandardError
         Failure('Error in our text cloud generator -- please try again')
       end      

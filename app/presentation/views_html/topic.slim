@@ -2,14 +2,10 @@
   h2
     span Topic
     span.topic style="padding-left:20px"
-      = keyword
-<iframe width="560" height="315" src="https://www.youtube.com/embed/tLnpS-kHKik" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-table.table id="textcloud_table"
-  tr
-    th.tags Tags
-    th.tags.amount Count
-  tr
-    - text_cloud.stats.each do |tag|
-      tr.tags.amount
-        td.tags #{tag[0]}
-        td.tags.amount #{tag[1]}
+  div id="textcloud_table"
+    - if text_cloud.stats.any?
+      main.mt-5.w-75.w-lg-full.mx-auto
+        ul.tags.d-flex.justify-content-center.list-unstyled.flex-wrap
+          - text_cloud.stats.each do |word|
+            li.tag
+              a.tag_link.m-3 class="tag_#{word["appearTimes"]}" style="font-size:#{word["appearTimes"]}px" href="../../tag/#{word["keyword"]}" = word["keyword"]

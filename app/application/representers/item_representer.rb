@@ -9,7 +9,8 @@ module HeadlineConnector
     class Item < Roar::Decorator
       include Roar::JSON
 
-      property :url
+      property :section
+      property :article_url
       property :title
       property :abstract
       property :img
