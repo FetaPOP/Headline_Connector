@@ -10,9 +10,11 @@ module Views
       end
 
       def time_sections
-        @tag.map do |duration, video_list|
-            TimeSection.new(duration, video_list)
-        end
+        timer_section_array = Array.new
+        timer_section_array.push(TimeSection.new("this_week", entity.this_week))
+        timer_section_array.push(TimeSection.new("this_month", entity.this_month))
+        timer_section_array.push(TimeSection.new("this_year", entity.this_year))
+        timer_section_array.push(TimeSection.new("before_this_year", entity.before_this_year))
       end
   
     end

@@ -3,8 +3,6 @@
 require 'roar/decorator'
 require 'roar/json'
 
-require_relative 'time_section_representer'
-
 # Represents essential feeds and text_cloud of a topic for API output
 module HeadlineConnector
   module Representer
@@ -12,7 +10,10 @@ module HeadlineConnector
     class Tag < Roar::Decorator
       include Roar::JSON
 
-      collection :time_sections, extend: Representer::TimeSection, class: OpenStruct
+      collection :this_week
+      collection :this_month
+      collection :this_year
+      collection :before_this_year
 
     end
   end

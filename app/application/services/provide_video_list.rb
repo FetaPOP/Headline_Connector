@@ -8,18 +8,19 @@ module HeadlineConnector
     class ProvideVideoList
       include Dry::Transaction
 
-      step :validate_input
+      step :validate_topic_in_api
       step :request_video_list
       step :reify_video_list
 
       private
 
-      def validate_input(input)
-        if input.success?
-          Success(input)
-        else
-          Failure(input.errors.values.join('; '))
-        end
+      def validate_topic_in_api(input)
+        result = Gateway::Api.new(App.config).add_topic(input[:tag])
+        result.success? ? Success(input) : Failure('Topic validation in the Api failed')
+
+      rescue StandardError => error
+        puts error.backtrace.join("\n")
+        Failure('Having some troubles validating topics in the Api database')
       end
 
       def request_video_list(input)
@@ -32,9 +33,11 @@ module HeadlineConnector
       end
 
       def reify_video_list(video_list_json)
-        Representer::Topic.new(OpenStruct.new)
+        Representer::Tag.new(OpenStruct.new)
           .from_json(video_list_json)
-          .then { |tag| Success(tag) }
+          .then do |tag|
+            Success(tag)
+          end
 
       rescue StandardError
         Failure('Error in the tag -- please try again')

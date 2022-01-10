@@ -12,9 +12,9 @@ module HeadlineConnector
     class Section < Roar::Decorator
       include Roar::JSON
 
-      property :name
-      collection :items, extend: Representer::Item, class: OpenStruct
-
+      collection :section, extend: Representer::Item, class: OpenStruct
+      property   :name
+      
     end
   end
 end

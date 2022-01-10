@@ -6,11 +6,14 @@ module Views
       end
   
       def entity
-        @text_cloud
+        @text_cloud.stats.map do |word|
+          word["appearTimes"] = word["appearTimes"] * 3
+          word
+        end
       end
   
       def stats
-        @text_cloud.stats
+        entity
       end
   
     end

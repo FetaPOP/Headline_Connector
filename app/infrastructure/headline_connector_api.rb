@@ -47,7 +47,7 @@ module HeadlineConnector
         end
 
         def add_topic(keyword)
-          call_api('post', ['topics', keyword])
+          call_api('post', ['topic', keyword])
         end
 
         def generate_textCloud(keyword)
@@ -63,7 +63,6 @@ module HeadlineConnector
         def call_api(method, resources = [])
           api_path = resources.empty? ? @api_host : @api_root
           url = [api_path, resources].flatten.join('/')
-
           HTTP.headers('Accept' => 'application/json').send(method, url)
             .then { |http_response| Response.new(http_response) }
         rescue StandardError

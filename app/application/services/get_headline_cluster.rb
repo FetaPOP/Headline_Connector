@@ -8,35 +8,27 @@ module HeadlineConnector
     class GetHeadlineCluster
       include Dry::Transaction
 
-      step :validate_input
       step :request_headline_cluster
       step :reify_headline_cluster
 
       private
 
-      def validate_input(input)
-        if input.success?
-          Success(input)
-        else
-          Failure(input.errors.values.join('; '))
-        end
-      end
-
-      def request_headline_cluster(input)
+      def request_headline_cluster()
         result = Gateway::Api.new(App.config).get_headline_cluster()
         result.success? ? Success(result.payload) : Failure(result.message)
 
       rescue StandardError => e
-        puts e.inspect + '\n' + e.backtrace
+        puts e.inspect
         Failure('Having some troubles get reply of request_headline_cluster() from the Api')
       end
 
-      def reify_headline_cluster(headline_cluster_json)
+      def reify_headline_cluster(h)
         Representer::HeadlineCluster.new(OpenStruct.new)
-          .from_json(headline_cluster_json)
+          .from_json(h)
           .then { |headline_cluster| Success(headline_cluster) }
 
-      rescue StandardError
+      rescue StandardError => e
+        puts e.full_message
         Failure('Error in the topic -- please try again')
       end
     end

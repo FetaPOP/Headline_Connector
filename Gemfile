@@ -7,6 +7,10 @@ ruby File.read('.ruby-version').strip
 gem 'figaro', '~> 1.2'
 gem 'rake', '~> 13.0'
 
+# PRESENTATION LAYER
+gem 'multi_json', '~> 1.15'
+gem 'roar', '~> 1.1'
+
 # APPLICATION LAYER
 # Web application related
 gem 'puma', '~> 5.5'
@@ -18,6 +22,11 @@ gem 'slim', '~> 4.1'
 gem 'dry-monads', '~> 1.4'
 gem 'dry-transaction', '~> 0.13'
 gem 'dry-validation', '~> 1.7'
+
+# Caching
+gem 'rack-cache', '~> 1.13'
+gem 'redis', '~> 4.5'
+gem 'redis-rack-cache', '~> 2.2'
 
 # Representers
 gem 'multi_json'
