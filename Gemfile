@@ -28,6 +28,10 @@ gem 'rack-cache', '~> 1.13'
 gem 'redis', '~> 4.5'
 gem 'redis-rack-cache', '~> 2.2'
 
+# Representers
+gem 'multi_json'
+gem 'roar'
+
 # INFRASTRUCTURE LAYER
 # Networking
 gem 'http', '~> 5.0'
