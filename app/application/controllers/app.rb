@@ -72,7 +72,7 @@ module HeadlineConnector
             result = Views::Tag.new(result.value!)
 
             # Show viewer the tag
-            response.expires 60, public: true
+            #response.expires 60, public: true
             view 'tag', locals: {tag: tag, result: result}  
 
           end        
